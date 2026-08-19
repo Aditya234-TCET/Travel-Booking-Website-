@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Hotel, Search, Star, MapPin, Wifi, Coffee, Sparkles, DollarSign } from 'lucide-react';
+import api from '../services/api';
 
 export const HotelSearch = ({ onBookHotel, currencySymbol = '₹', formatPrice = (v) => '₹'+Number(v).toLocaleString(), onViewMap }) => {
   const [city, setCity] = useState('');
@@ -15,12 +16,7 @@ export const HotelSearch = ({ onBookHotel, currencySymbol = '₹', formatPrice =
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      const query = new URLSearchParams({
-        city,
-        maxPrice
-      }).toString();
-      const res = await fetch(`http://localhost:5000/api/hotels?${query}`);
-      const data = await res.json();
+      const data = await api.getHotels({ city, maxPrice });
       setHotels(data);
       setSearched(true);
     } catch (err) {

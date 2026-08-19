@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plane, Search, Calendar, Users, DollarSign, ArrowRight, ShieldCheck, Clock, Leaf } from 'lucide-react';
+import api from '../services/api';
 
 export const FlightSearch = ({ onBookFlight, currencySymbol = '₹', formatPrice = (v) => '₹'+Number(v).toLocaleString() }) => {
   const [departureCity, setDepartureCity] = useState('');
@@ -15,13 +16,7 @@ export const FlightSearch = ({ onBookFlight, currencySymbol = '₹', formatPrice
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      const query = new URLSearchParams({
-        departureCity,
-        arrivalCity,
-        maxPrice
-      }).toString();
-      const res = await fetch(`http://localhost:5000/api/flights?${query}`);
-      const data = await res.json();
+      const data = await api.getFlights({ departureCity, arrivalCity, maxPrice });
       setFlights(data);
       setSearched(true);
     } catch (err) {
