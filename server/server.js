@@ -7,8 +7,8 @@ const dns = require('dns');
 
 dotenv.config();
 
-// Force Google DNS to bypass ISP/College Network SRV blocks for MongoDB Atlas (Local only)
-if (process.env.NODE_ENV !== 'production') {
+// Force Google DNS to bypass ISP/College Network SRV blocks for MongoDB Atlas (Local Windows only)
+if (process.platform === 'win32') {
   dns.setServers(['8.8.8.8', '8.8.4.4']);
 }
 
