@@ -24,6 +24,8 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const aiPlannerRoutes = require('./routes/aiPlannerRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const trainRoutes = require('./routes/trainRoutes');
+const cabRoutes = require('./routes/cabRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/flights', flightRoutes);
@@ -34,6 +36,8 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/ai-planner', aiPlannerRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/trains', trainRoutes);
+app.use('/api/cabs', cabRoutes);
 
 // Root route check
 app.get('/', (req, res) => {

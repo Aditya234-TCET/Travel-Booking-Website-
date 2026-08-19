@@ -191,9 +191,20 @@ export const api = {
 
   // Admin
   getAdminStats: async () => {
-    const res = await fetch(`${API_BASE_URL}/admin/stats`, {
-      headers: getHeaders()
-    });
+    const res = await fetch(`${API_BASE_URL}/admin/stats`, { headers: getHeaders() });
+    if (!res.ok) throw new Error('Failed to fetch admin stats');
+    return res.json();
+  },
+  getTrains: async () => {
+    const res = await fetch(`${API_BASE_URL}/trains`);
+    if (!res.ok) throw new Error('Failed to fetch trains');
+    return res.json();
+  },
+  getCabs: async () => {
+    const res = await fetch(`${API_BASE_URL}/cabs`);
+    if (!res.ok) throw new Error('Failed to fetch cabs');
     return res.json();
   }
 };
+
+export default api;

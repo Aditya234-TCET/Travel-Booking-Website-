@@ -10,6 +10,9 @@ const Hotel = require('./models/Hotel');
 const Package = require('./models/Package');
 const Booking = require('./models/Booking');
 const Review = require('./models/Review');
+const Train = require('./models/Train');
+const Cab = require('./models/Cab');
+const Payment = require('./models/Payment');
 
 const initialUsers = [
   {
@@ -547,6 +550,9 @@ async function seedDB() {
   await Package.deleteMany({});
   await Booking.deleteMany({});
   await Review.deleteMany({});
+  await Train.deleteMany({});
+  await Cab.deleteMany({});
+  await Payment.deleteMany({});
 
   console.log('Seeding updated international destinations into MongoDB...');
 
@@ -580,6 +586,30 @@ async function seedDB() {
     targetId: createdPackages[0]._id.toString(),
     rating: 5,
     comment: 'Absolutely magical experience! Everything from hotel transfers to guided tours was super smooth.'
+  });
+
+  const initialTrains = [
+    { trainName: 'Vande Bharat Express', trainNumber: '22436', departureTime: '06:00 AM', arrivalTime: '02:00 PM', duration: '8h', price: 1500, classType: 'AC Chair Car', seatsAvailable: 42, departureCity: 'Delhi', arrivalCity: 'Mumbai' },
+    { trainName: 'Rajdhani Express', trainNumber: '12952', departureTime: '04:30 PM', arrivalTime: '08:35 AM', duration: '16h 05m', price: 2800, classType: '1st AC Sleeper', seatsAvailable: 12, departureCity: 'Delhi', arrivalCity: 'Mumbai' },
+    { trainName: 'Shatabdi Express', trainNumber: '12009', departureTime: '06:15 AM', arrivalTime: '11:15 AM', duration: '5h', price: 950, classType: 'Executive Class', seatsAvailable: 55, departureCity: 'Mumbai', arrivalCity: 'Ahmedabad' },
+  ];
+
+  const initialCabs = [
+    { type: 'Economy Hatchback', model: 'Swift, i20 or similar', capacity: '4 Seats', price: 800, duration: '45 mins', rating: 4.8 },
+    { type: 'Premium Sedan', model: 'City, Ciaz or similar', capacity: '4 Seats', price: 1200, duration: '40 mins', rating: 4.9 },
+    { type: 'Luxury SUV', model: 'Innova Crysta or similar', capacity: '6 Seats', price: 2100, duration: '40 mins', rating: 5.0 },
+  ];
+
+  await Train.insertMany(initialTrains);
+  await Cab.insertMany(initialCabs);
+
+  await Payment.create({
+    userId: createdUsers[1]._id.toString(),
+    transactionId: 'TXN-99882211',
+    amount: createdPackages[0].price * 2,
+    currency: 'INR',
+    method: 'Stripe Credit Card',
+    status: 'successful'
   });
 
   console.log('🎉 MongoDB International Seed Completed Successfully!');

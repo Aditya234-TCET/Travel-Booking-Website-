@@ -1,5 +1,9 @@
+const mongoose = require('mongoose');
+const Payment = require('../models/Payment');
+const store = require('../store');
+
 // Simulated Payment Gateway Controller (Stripe & Razorpay)
-const processPayment = (req, res) => {
+const processPayment = async (req, res) => {
   const { amount, currency, method, cardDetails, upiId } = req.body;
 
   if (!amount || !method) {
@@ -11,6 +15,25 @@ const processPayment = (req, res) => {
 
   if (isSuccessful) {
     const transactionId = 'TXN_GATEWAY_' + Math.random().toString(36).substring(2, 11).toUpperCase();
+    
+    // Save to DB or Store
+    if (mongoose.connection.readyState === 1) {
+       await Payment.create({
+         userId: req.user ? req.user.id : new mongoose.Types.ObjectId(), // fallback for demo
+         transactionId,
+         amount: Number(amount),
+         currency: currency || 'INR',
+         method,
+         status: 'successful'
+       });
+    } else {
+       if(!store.payments) store.payments = [];
+       store.payments.push({
+         id: 'pay-' + Date.now(),
+         transactionId, amount, currency, method, status: 'successful'
+       });
+    }
+
     return res.status(200).json({
       success: true,
       transactionId,

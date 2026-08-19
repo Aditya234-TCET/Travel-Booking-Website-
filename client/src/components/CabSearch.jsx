@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Car, Search, Clock, ShieldCheck, MapPin } from 'lucide-react';
+import api from '../services/api';
 
 export const CabSearch = ({ onBookCab, currencySymbol = '₹', formatPrice = (v) => '₹'+Number(v).toLocaleString() }) => {
   const [pickup, setPickup] = useState('');
@@ -7,12 +8,20 @@ export const CabSearch = ({ onBookCab, currencySymbol = '₹', formatPrice = (v)
   const [date, setDate] = useState('2026-08-10');
   const [searched, setSearched] = useState(false);
 
-  // Mock Cab Data
-  const mockCabs = [
-    { id: 'C1', type: 'Economy Hatchback', model: 'Swift, i20 or similar', capacity: '4 Seats', price: 800, duration: '45 mins', rating: '4.8' },
-    { id: 'C2', type: 'Premium Sedan', model: 'City, Ciaz or similar', capacity: '4 Seats', price: 1200, duration: '40 mins', rating: '4.9' },
-    { id: 'C3', type: 'Luxury SUV', model: 'Innova Crysta or similar', capacity: '6 Seats', price: 2100, duration: '40 mins', rating: '5.0' },
-  ];
+  const [cabs, setCabs] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCabs = async () => {
+      try {
+        const data = await api.getCabs();
+        setCabs(data);
+      } catch (err) {
+        console.error('Failed to load cabs', err);
+      }
+    };
+    fetchCabs();
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -53,9 +62,9 @@ export const CabSearch = ({ onBookCab, currencySymbol = '₹', formatPrice = (v)
 
       {searched && (
         <div className="animate-fade-in">
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>Available Cabs ({mockCabs.length})</h3>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>Available Cabs ({cabs.length})</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-            {mockCabs.map((cab) => (
+            {cabs.map((cab) => (
               <div key={cab.id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <div>
