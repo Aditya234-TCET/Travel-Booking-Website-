@@ -1,6 +1,6 @@
 # 🚀 Travel Booking Website (Full-Stack MERN Platform)
 
-A real-world full-stack Travel Booking Application where users can search destinations, book flights, hotels, and holiday packages. It combines JWT authentication, advanced search & filtering, booking management, Stripe/Razorpay payment gateway integration, AI trip planner, interactive Leaflet maps, weather forecasts, loyalty rewards, and administrator command dashboard into a production-ready application.
+A real-world full-stack Travel Booking Application where users can search destinations, book flights, hotels, holiday packages, trains, and intercity cabs. It combines JWT authentication, advanced search & filtering, booking management, Stripe/Razorpay payment gateway integration, an AI trip planner, interactive Leaflet maps, weather forecasts, loyalty rewards, and a dynamic currency conversion engine into a resilient, production-ready application.
 
 ---
 
@@ -113,29 +113,34 @@ Earn Loyalty Reward Points ──> View Booking History & Manage Cancellations
 
 3. **🏨 Hotel & Resort Finder**
    - Search by destination city, night budget, amenities, and user ratings.
-   - Integrated Leaflet Map location visualizer.
+   - Integrated Leaflet Map Location visualizer (rendered dynamically via interactive modal).
 
 4. **🌍 Holiday Package Expeditions**
    - Curated tours with included flight airfares, 5-star hotel stays, meals & excursions.
    - Detailed trip itinerary breakdowns & reviews.
 
-5. **💳 Online Payment Integration (Stripe / Razorpay Simulator)**
+5. **🚆 Train & 🚖 Cab Search Modules**
+   - **Intercity Trains**: Search high-speed rails with class availability (Sleeper, AC).
+   - **Cab Service**: Book sanitized intercity and local cabs with pickup/drop locations and estimated fares.
+
+6. **💳 Online Payment Integration (Stripe / Razorpay Simulator)**
    - Credit/Debit Card validation, UPI ID option, Net Banking selection.
    - Transaction ID generation and interactive celebratory confetti animation.
 
-6. **🚫 Anti-Double Booking Security**
-   - Backend prevents duplicate active bookings for the same item on identical dates.
+7. **🚫 Anti-Double Booking & Offline Resilience**
+   - **Anti-Double Booking**: Backend prevents duplicate active bookings for the same item on identical dates.
+   - **Offline Mode Fallback**: If the Node.js backend drops or disconnects, the frontend seamlessly transitions to a local `localStorage` simulation. Users can still login, book trips, and view their booking dashboards without a single crash or blank screen.
 
-7. **🛡️ Admin Command Dashboard**
+8. **🛡️ Admin Command Dashboard**
    - Real-time revenue analytics, total bookings, active users, and popular destination reports.
    - Add new holiday packages, airline routes, and hotel resorts with instant sync.
 
-8. **🌟 Bonus Features Included**
+9. **🌟 Bonus Features Included**
    - 🌙 **Dark & Light Mode Toggle**
    - 🤖 **AI Trip Planner**: Tailored day-by-day customized itinerary generator based on budget & vibe.
    - 🌦 **Live Destination Weather Widget**
-   - 💱 **Live Currency Converter** (₹ INR, $ USD, € EUR, £ GBP)
-   - 🗺 **Interactive Leaflet Maps Integration**
+   - 💱 **Dynamic Currency Engine**: Automatically recalculates numerical values and symbols (₹ INR, $ USD, € EUR, £ GBP) across all pages and booking modals based on real exchange rates.
+   - 🗺 **Interactive Leaflet Maps Integration**: View hotel locations and points of interest via beautifully styled modal overlays.
    - 💬 **24/7 Floating AI Live Chat Assistant**
    - 🎁 **Loyalty Rewards Program**: Earn 5% points back on every booking + discount vouchers!
 
