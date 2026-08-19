@@ -3,6 +3,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const path = require('path');
+const dns = require('dns');
+
+// Force Google DNS to bypass ISP/College Network SRV blocks for MongoDB Atlas
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 dotenv.config();
 
