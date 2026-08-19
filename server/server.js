@@ -53,13 +53,14 @@ app.get('/', (req, res) => {
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel_booking';
 
 mongoose.connect(MONGO_URI, {
-  serverSelectionTimeoutMS: 2000
+  serverSelectionTimeoutMS: 10000 // Increased timeout for cloud deployment
 })
 .then(() => {
-  console.log('✅ Connected to MongoDB Compass / Local Database');
+  console.log('✅ Connected to MongoDB Database');
 })
 .catch((err) => {
-  console.log('⚠️ MongoDB not detected locally (or offline). Application is running with In-Memory Mock Store fallback seamlessly!');
+  console.error('⚠️ MongoDB Connection Error:', err.message);
+  console.log('⚠️ Application is running with In-Memory Mock Store fallback seamlessly!');
 });
 
 const PORT = process.env.PORT || 5000;
