@@ -6,9 +6,11 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
   const [departure, setDeparture] = useState('');
   const [arrival, setArrival] = useState('');
   const [travelDate, setTravelDate] = useState('2026-08-15');
+  const [trainQuery, setTrainQuery] = useState('');
   const [searched, setSearched] = useState(false);
 
-  const [trains, setTrains] = useState([]);
+  const [allTrains, setAllTrains] = useState([]);
+  const [filteredTrains, setFilteredTrains] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -16,7 +18,8 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
     const fetchTrains = async () => {
       try {
         const data = await api.getTrains();
-        setTrains(data);
+        setAllTrains(data);
+        setFilteredTrains(data);
       } catch (err) {
         console.error('Failed to load trains', err);
       }
@@ -26,6 +29,22 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
 
   const handleSearch = (e) => {
     e.preventDefault();
+    let result = allTrains;
+    
+    if (departure) {
+      result = result.filter(t => t.departureCity.toLowerCase().includes(departure.toLowerCase()));
+    }
+    if (arrival) {
+      result = result.filter(t => t.arrivalCity.toLowerCase().includes(arrival.toLowerCase()));
+    }
+    if (trainQuery) {
+      result = result.filter(t => 
+        t.trainName.toLowerCase().includes(trainQuery.toLowerCase()) || 
+        t.trainNumber.includes(trainQuery)
+      );
+    }
+    
+    setFilteredTrains(result);
     setSearched(true);
   };
 
@@ -44,12 +63,16 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
 
         <form onSubmit={handleSearch} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', alignItems: 'end' }}>
           <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Train No. / Name</label>
+            <input type="text" placeholder="e.g. 12952 or Rajdhani" value={trainQuery} onChange={(e) => setTrainQuery(e.target.value)} className="form-input" />
+          </div>
+          <div className="form-group" style={{ marginBottom: 0 }}>
             <label>From Station</label>
-            <input type="text" placeholder="e.g. New Delhi (NDLS)" value={departure} onChange={(e) => setDeparture(e.target.value)} className="form-input" required />
+            <input type="text" placeholder="e.g. New Delhi" value={departure} onChange={(e) => setDeparture(e.target.value)} className="form-input" />
           </div>
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label>To Station</label>
-            <input type="text" placeholder="e.g. Mumbai (BCT)" value={arrival} onChange={(e) => setArrival(e.target.value)} className="form-input" required />
+            <input type="text" placeholder="e.g. Mumbai" value={arrival} onChange={(e) => setArrival(e.target.value)} className="form-input" />
           </div>
           <div className="form-group" style={{ marginBottom: 0 }}>
             <label>Travel Date</label>
@@ -63,9 +86,11 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
 
       {searched && (
         <div className="animate-fade-in">
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>Available Trains ({trains.length})</h3>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1rem' }}>Available Trains ({filteredTrains.length})</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {trains.map((train) => (
+            {filteredTrains.length === 0 ? (
+              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No trains found matching your search.</div>
+            ) : filteredTrains.map((train) => (
               <div key={train.id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <div style={{ fontSize: '2rem', background: 'var(--bg-secondary)', padding: '0.75rem', borderRadius: '12px', color: '#f59e0b' }}>
@@ -78,7 +103,7 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
                   <div style={{ textAlign: 'right' }}>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{departure || 'Station A'}</span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{train.departureCity}</span>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{train.departureTime}</div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -86,7 +111,7 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
                     <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{train.duration}</span>
                   </div>
                   <div>
-                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{arrival || 'Station B'}</span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)' }}>{train.arrivalCity}</span>
                     <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{train.arrivalTime}</div>
                   </div>
                 </div>
