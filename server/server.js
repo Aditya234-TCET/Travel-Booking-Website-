@@ -5,10 +5,12 @@ const mongoose = require('mongoose');
 const path = require('path');
 const dns = require('dns');
 
-// Force Google DNS to bypass ISP/College Network SRV blocks for MongoDB Atlas
-dns.setServers(['8.8.8.8', '8.8.4.4']);
-
 dotenv.config();
+
+// Force Google DNS to bypass ISP/College Network SRV blocks for MongoDB Atlas (Local only)
+if (process.env.NODE_ENV !== 'production') {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+}
 
 const app = express();
 
