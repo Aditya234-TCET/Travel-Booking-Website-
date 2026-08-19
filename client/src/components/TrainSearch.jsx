@@ -92,7 +92,7 @@ export const TrainSearch = ({ onBookTrain, currencySymbol = '₹', formatPrice =
                 </div>
                 <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
                   <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#10b981' }}>{formatPrice(train.price)}</div>
-                  <button onClick={() => onBookTrain({...train, title: train.trainName, price: train.price}, 'train')} className="btn-primary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', background: 'linear-gradient(135deg, #f59e0b, #ef4444)' }}>
+                  <button onClick={() => onBookTrain({...train, title: `${train.trainName} (Train No: ${train.trainNumber})`, price: train.price}, 'train')} className="btn-primary" style={{ padding: '0.5rem 1.2rem', fontSize: '0.9rem', background: 'linear-gradient(135deg, #f59e0b, #ef4444)' }}>
                     Book Train
                   </button>
                 </div>
