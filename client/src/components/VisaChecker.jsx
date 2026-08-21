@@ -60,7 +60,7 @@ export const VisaChecker = () => {
             style={{ padding: '0.6rem', fontSize: '0.9rem', background: 'var(--bg-primary)' }}
           >
             {countries.map(country => (
-              <option key={country} value={country}>{country}</option>
+              <option key={country} value={country} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>{country}</option>
             ))}
           </select>
         </div>
@@ -76,7 +76,7 @@ export const VisaChecker = () => {
               style={{ border: 'none', background: 'transparent', padding: '0.6rem', fontSize: '0.9rem' }}
             >
               {countries.map(country => (
-                <option key={country} value={country}>{country}</option>
+                <option key={country} value={country} style={{ background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}>{country}</option>
               ))}
             </select>
           </div>
