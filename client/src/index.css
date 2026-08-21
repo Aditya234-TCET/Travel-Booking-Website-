@@ -22,6 +22,12 @@
   --radius-lg: 20px;
   --radius-md: 14px;
   --radius-sm: 8px;
+  
+  /* Animated Background Colors */
+  --bg-gradient-1: #080c16;
+  --bg-gradient-2: #1e1b4b;
+  --bg-gradient-3: #0f172a;
+  --bg-gradient-4: #083344;
 }
 
 [data-theme='light'] {
@@ -36,6 +42,12 @@
   --glass-bg: rgba(255, 255, 255, 0.9);
   --modal-overlay: rgba(15, 23, 42, 0.6);
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+  
+  /* Light Theme Animated Background Colors */
+  --bg-gradient-1: #f8fafc;
+  --bg-gradient-2: #e0e7ff;
+  --bg-gradient-3: #f1f5f9;
+  --bg-gradient-4: #cffafe;
 }
 
 * {
@@ -47,10 +59,18 @@
 }
 
 body {
-  background-color: var(--bg-primary);
+  background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
+  background-size: 400% 400%;
+  animation: bgGradientShift 18s ease infinite;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+@keyframes bgGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Scrollbar */
