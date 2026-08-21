@@ -59,9 +59,7 @@
 }
 
 body {
-  background: linear-gradient(-45deg, var(--bg-gradient-1), var(--bg-gradient-2), var(--bg-gradient-3), var(--bg-gradient-4));
-  background-size: 400% 400%;
-  animation: bgGradientShift 18s ease infinite;
+  background: transparent;
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;

@@ -7,6 +7,7 @@ import { AiPlannerModal } from './components/AiPlannerModal';
 import { LiveChatWidget } from './components/LiveChatWidget';
 import { TrainSearch } from './components/TrainSearch';
 import { CabSearch } from './components/CabSearch';
+import { BackgroundSlideshow } from './components/BackgroundSlideshow';
 
 import { HomePage } from './pages/HomePage';
 import { FlightsPage } from './pages/FlightsPage';
@@ -114,6 +115,8 @@ export function App() {
 
   return (
     <div className="app-container">
+      <BackgroundSlideshow theme={theme} />
+      
       {/* Navigation Header */}
       <Navbar 
         activePage={activePage} 
