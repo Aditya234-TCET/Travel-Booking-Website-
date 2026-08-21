@@ -5,14 +5,7 @@ const countries = [
   "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czechia", "Democratic Republic of the Congo", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"
 ];
 
-const visaDatabase = {
-  'India-Thailand': { status: 'Visa on Arrival', color: '#f59e0b', icon: <Info size={16} /> },
-  'India-Dubai': { status: 'E-Visa Required', color: '#00f2fe', icon: <Info size={16} /> },
-  'India-Maldives': { status: 'Visa Free (30 days)', color: '#10b981', icon: <CheckCircle size={16} /> },
-  'India-France': { status: 'Schengen Visa Required', color: '#ef4444', icon: <AlertTriangle size={16} /> },
-  'US-France': { status: 'Visa Free (90 days)', color: '#10b981', icon: <CheckCircle size={16} /> },
-  'UK-Australia': { status: 'E-Visitor Visa', color: '#00f2fe', icon: <Info size={16} /> },
-};
+// Henley Passport Index Algorithm Simulator
 
 export const VisaChecker = () => {
   const [nationality, setNationality] = useState('India');
@@ -28,18 +21,54 @@ export const VisaChecker = () => {
     setResult(null);
 
     setTimeout(() => {
-      const key = `${nationality}-${destination}`;
-      if (visaDatabase[key]) {
-        setResult(visaDatabase[key]);
+      let status = '';
+      let color = '';
+      let icon = null;
+
+      const tier1 = ["United States", "United Kingdom", "Canada", "Australia", "New Zealand", "Japan", "Singapore", "South Korea", "Germany", "France", "Italy", "Spain", "Netherlands", "Sweden", "Switzerland", "Norway"];
+      const tier3 = ["Afghanistan", "Syria", "Iraq", "Pakistan", "Somalia", "Yemen", "Sudan", "North Korea", "Libya", "Palestine"];
+      const visaOnArrivalFriendly = ["Maldives", "Thailand", "Sri Lanka", "Indonesia", "Seychelles", "Mauritius", "Nepal", "Bhutan", "Cambodia", "Vietnam", "Laos"];
+
+      if (nationality === destination) {
+        status = 'Domestic Travel (No Visa)';
+        color = '#10b981';
+        icon = <CheckCircle size={16} />;
+      } else if (tier3.includes(nationality)) {
+        status = 'Visa Required (Consulate)';
+        color = '#ef4444';
+        icon = <AlertTriangle size={16} />;
+      } else if (tier1.includes(nationality)) {
+        // Very strong passports
+        if (["Russia", "China", "North Korea"].includes(destination)) {
+          status = 'Visa Required';
+          color = '#ef4444';
+          icon = <AlertTriangle size={16} />;
+        } else {
+          status = 'Visa Free (Up to 90 days)';
+          color = '#10b981';
+          icon = <CheckCircle size={16} />;
+        }
+      } else if (tier1.includes(destination)) {
+        // Travelling to strict countries with a standard passport
+        status = 'Visa Required (Consulate)';
+        color = '#ef4444';
+        icon = <AlertTriangle size={16} />;
+      } else if (nationality === 'India' && ["United Arab Emirates", "Qatar", "Oman", "Bahrain"].includes(destination)) {
+        status = 'E-Visa Required';
+        color = '#00f2fe';
+        icon = <Info size={16} />;
+      } else if (visaOnArrivalFriendly.includes(destination)) {
+        status = 'Visa on Arrival / E-Visa';
+        color = '#f59e0b';
+        icon = <Info size={16} />;
       } else {
-        // Mock random result for demo purposes
-        const outcomes = [
-           { status: 'Visa Free', color: '#10b981', icon: <CheckCircle size={16} /> },
-           { status: 'E-Visa Available', color: '#00f2fe', icon: <Info size={16} /> },
-           { status: 'Visa Required', color: '#ef4444', icon: <AlertTriangle size={16} /> }
-        ];
-        setResult(outcomes[Math.floor(Math.random() * outcomes.length)]);
+        // General fallback for average travel
+        status = 'E-Visa Available';
+        color = '#00f2fe';
+        icon = <Info size={16} />;
       }
+
+      setResult({ status, color, icon });
       setIsChecking(false);
     }, 800);
   };
