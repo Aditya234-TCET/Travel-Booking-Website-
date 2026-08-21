@@ -7,6 +7,19 @@ const dns = require('dns');
 
 dotenv.config();
 
+// Database Connection with Fallback (Wait for it in serverless)
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel_booking';
+const dbPromise = mongoose.connect(MONGO_URI, {
+  serverSelectionTimeoutMS: 10000 // Increased timeout for cloud deployment
+})
+.then(() => {
+  console.log('✅ Connected to MongoDB Database');
+})
+.catch((err) => {
+  console.error('⚠️ MongoDB Connection Error:', err.message);
+  console.log('⚠️ Application is running with In-Memory Mock Store fallback seamlessly!');
+});
+
 // Force Google DNS to bypass ISP/College Network SRV blocks for MongoDB Atlas (Local Windows only)
 if (process.platform === 'win32') {
   dns.setServers(['8.8.8.8', '8.8.4.4']);
@@ -19,6 +32,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Serverless DB Wait Middleware
+app.use(async (req, res, next) => {
+  await dbPromise; // Ensure DB connection is resolved before handling requests
+  next();
+});
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
@@ -55,19 +74,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Database Connection with Fallback
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/travel_booking';
-
-mongoose.connect(MONGO_URI, {
-  serverSelectionTimeoutMS: 10000 // Increased timeout for cloud deployment
-})
-.then(() => {
-  console.log('✅ Connected to MongoDB Database');
-})
-.catch((err) => {
-  console.error('⚠️ MongoDB Connection Error:', err.message);
-  console.log('⚠️ Application is running with In-Memory Mock Store fallback seamlessly!');
-});
+// Database connection moved to top for Serverless compatibility
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
